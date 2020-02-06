@@ -1,9 +1,15 @@
 from selenium import webdriver
 import time
 import csv
+import pandas as pd
 from parsel import Selector
 
 
+# CODE BY DEAN ALLEN for RPS
+# FEB 6TH, 2020
+# EDIT LINES 42 AND 48 TO EDIT EMAIL AND PASSWORD FOR LINKED
+
+# this functino scrolls the webpage to the bottom when called
 def scroller():
     SCROLL_PAUSE_TIME = 0.5
 
@@ -30,20 +36,27 @@ driver = webdriver.Chrome('/usr/local/bin/chromedriver')
 # driver.get method() will navigate to a page given by the URL address
 driver.get('https://www.linkedin.com')
 
-time.sleep(3)
+# sleep to make sure everything loads
+time.sleep(2)
 
 # locate email form by_class_name
 username = driver.find_element_by_name('session_key')
 
-# send_keys() to simulate key strokes
-username.send_keys('')
+###############################################################CHANGE USERNAME BELOW
+# CHANGE USERNAME/EMAIL HERE
+username.send_keys('ur email here')
+###############################################################
+
+
 
 # locate password form by_class_name
 password = driver.find_element_by_name('session_password')
 
-# send_keys() to simulate key strokes
-password.send_keys('')
 
+
+###############################################################CHANGE PASSWORD BELOW
+password.send_keys('ur pass here')
+###############################################################
 # locate submit button by_class_name
 log_in_button = driver.find_element_by_class_name('sign-in-form__submit-btn')
 
@@ -53,62 +66,77 @@ log_in_button.click()
 # goto connections
 driver.get('https://www.linkedin.com/mynetwork/invite-connect/connections/')
 
-# scroll
+# scroll to bottom to load all connections
 scroller()
 
-# get user links
+# get user links and put into a list
 connections = driver.find_elements_by_class_name('mn-connection-card__link')
 
+# create a set of urls so no duplicates
 urls = set()
 
+# add all connection link to url set
 for a in connections:
     urls.add(a.get_attribute('href'))
 
+# sleep so cou
 time.sleep(0.5)
 
 leads = []
 
 for url in urls:
-    # get the profile URL
-    driver.get(url)
 
-    # add a 5 second pause loading each URL
-    time.sleep(0.5)
-
-    #  names
-    name = driver.find_element_by_class_name('t-24').text
-    namesSplit = name.split()
-    last = namesSplit[-1]
-    first = namesSplit[:-1]
-    first = ' '.join(first)
-
-    # title
-    title = driver.find_element_by_class_name('t-18').text
-
-    # get email
     try:
-        driver.get(url + 'detail/contact-info/')
+
+        # get the profile URL
+        driver.get(url)
+
+        # add a 5 second pause loading each URL
         time.sleep(0.5)
-        email = driver.find_element_by_class_name('ci-email').text.split()[-1]
+
+        #  names
+        name = driver.find_element_by_class_name('t-24').text
+        namesSplit = name.split()
+        last = namesSplit[-1]
+        first = namesSplit[:-1]
+        first = ' '.join(first)
+
+        # title
+        title = driver.find_element_by_class_name('t-18').text
+
+        # get email
+        try:
+            driver.get(url + 'detail/contact-info/')
+            time.sleep(0.5)
+            email = driver.find_element_by_class_name('ci-email').text.split()[-1]
+        except:
+            email = "No eMail found"
+
+        leads.append({'first': first, 'last': last, 'org': title, 'email': email})
+
+        csvLead = [first, last, title, email]
+
+        with open('leads.csv', 'a') as f:
+            writer = csv.writer(f)
+            writer.writerow(csvLead)
+
+        print("name", name)
+        print("title", title)
+        print("email", email)
+
+        time.sleep(0.5)
     except:
-        email = ""
+        print("error, contact not able to saved")
+        pass
 
-    leads.append({'first': first, 'last': last, 'org': title, 'email': email})
-
-    print("name", name)
-    print("title", title)
-    print("email", email)
-
-    time.sleep(0.5)
+# remove duplicates
 
 
-# write to file
-with open('leads.csv', mode='w') as csv_file:
-    writer = csv.writer(csv_file)
-    for lead in leads:
-        writer.writerow([lead['first'], lead['last'], lead['org'], lead['email']])
-
-
-
+with open('leads.csv','r') as in_file, open('noDuplicates.csv','w') as out_file:
+    seen = set() # set for fast O(1) amortized lookup
+    for line in in_file:
+        if line in seen: continue # skip duplicate
+        seen.add(line)
+        out_file.write(line)
 # terminates the application
 driver.quit()

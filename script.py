@@ -79,11 +79,16 @@ urls = set()
 for a in connections:
     urls.add(a.get_attribute('href'))
 
-# sleep so cou
+# sleep for a little to be confuse algorithms
 time.sleep(0.5)
 
+# initialize vars
 leads = []
-
+first = ""
+last = ""
+email = ""
+namesSplit = ""
+title = ""
 for url in urls:
 
     try:
@@ -94,7 +99,7 @@ for url in urls:
         # add a 5 second pause loading each URL
         time.sleep(0.5)
 
-        #  names
+        #  names, split first and last
         name = driver.find_element_by_class_name('t-24').text
         namesSplit = name.split()
         last = namesSplit[-1]

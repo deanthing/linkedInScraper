@@ -1,0 +1,6 @@
+
+
+|||||||||||||||||||||||||INSTRUCTIONS FOR RUNNING LINKEDIN SCRAPERS|||||||||||||||||||||||
+
+
+EDIT YOUR EMAIL AND PASSWORD IN THE USERINFO FILE

@@ -10,24 +10,36 @@ from parsel import Selector
 # EDIT LINES 42 AND 48 TO EDIT EMAIL AND PASSWORD FOR LINKED
 
 # this functino scrolls the webpage to the bottom when called
+# def scroller():
+#     SCROLL_PAUSE_TIME = 0.5
+#
+#     # Get scroll height
+#     last_height = driver.execute_script("return document.body.scrollHeight")
+#
+#     while True:
+#         # Scroll down to bottom
+#         driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+#
+#         # Wait to load page
+#         time.sleep(SCROLL_PAUSE_TIME)
+#
+#         # Calculate new scroll height and compare with last scroll height
+#         new_height = driver.execute_script("return document.body.scrollHeight")
+#         if new_height == last_height:
+#             break
+#         last_height = new_height
+
 def scroller():
-    SCROLL_PAUSE_TIME = 0.5
-
-    # Get scroll height
-    last_height = driver.execute_script("return document.body.scrollHeight")
-
-    while True:
-        # Scroll down to bottom
-        driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
-
-        # Wait to load page
-        time.sleep(SCROLL_PAUSE_TIME)
-
-        # Calculate new scroll height and compare with last scroll height
-        new_height = driver.execute_script("return document.body.scrollHeight")
-        if new_height == last_height:
-            break
-        last_height = new_height
+    lenOfPage = driver.execute_script(
+        "window.scrollTo(0, document.body.scrollHeight);var lenOfPage=document.body.scrollHeight;return lenOfPage;")
+    match = False
+    while (match == False):
+        lastCount = lenOfPage
+        time.sleep(3)
+        lenOfPage = driver.execute_script(
+            "window.scrollTo(0, document.body.scrollHeight);var lenOfPage=document.body.scrollHeight;return lenOfPage;")
+        if lastCount == lenOfPage:
+            match = True
 
 
 # specifies the path to the chromedriver.exe
@@ -44,7 +56,7 @@ username = driver.find_element_by_name('session_key')
 
 ###############################################################CHANGE USERNAME BELOW
 # CHANGE USERNAME/EMAIL HERE
-username.send_keys('ur email here')
+username.send_keys('')
 ###############################################################
 
 
@@ -55,7 +67,7 @@ password = driver.find_element_by_name('session_password')
 
 
 ###############################################################CHANGE PASSWORD BELOW
-password.send_keys('ur pass here')
+password.send_keys('')
 ###############################################################
 # locate submit button by_class_name
 log_in_button = driver.find_element_by_class_name('sign-in-form__submit-btn')
@@ -135,7 +147,6 @@ for url in urls:
         pass
 
 # remove duplicates
-
 
 with open('leads.csv','r') as in_file, open('noDuplicates.csv','w') as out_file:
     seen = set() # set for fast O(1) amortized lookup

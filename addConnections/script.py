@@ -1,4 +1,6 @@
 import os
+import random
+
 from selenium import webdriver
 import time
 import csv
@@ -75,6 +77,7 @@ items = listOfPeople.find_elements_by_tag_name("li")
 
 # loop through people loaded
 for person in items:
+
     # try do add em, if it fails, it will pass and print "error"
     try:
 

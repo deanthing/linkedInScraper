@@ -26,7 +26,7 @@ def scroller2(numberOfConnections):
         driver.execute_script("window.scrollBy(0, -45);")
         # wait
         time.sleep(1)
-
+# git test
 
 # specifies the path to the chromedriver.exe
 driver = webdriver.Chrome('/usr/local/bin/chromedriver')

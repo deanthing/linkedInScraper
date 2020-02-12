@@ -60,6 +60,8 @@ password.send_keys(info[1])
 # locate submit button by_class_name
 log_in_button = driver.find_element_by_class_name('sign-in-form__submit-btn')
 
+
+
 # .click() to mimic button click
 log_in_button.click()
 

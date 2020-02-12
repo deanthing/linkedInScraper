@@ -27,7 +27,7 @@ def scroller2(numberOfConnections):
         # wait
         time.sleep(1)
 # git test
-
+# git test test
 # specifies the path to the chromedriver.exe
 driver = webdriver.Chrome('/usr/local/bin/chromedriver')
 

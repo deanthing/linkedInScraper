@@ -43,21 +43,15 @@ time.sleep(2)
 # locate email form by_class_name
 username = driver.find_element_by_name('session_key')
 
-###############################################################CHANGE USERNAME BELOW
 # CHANGE USERNAME/EMAIL HERE
 username.send_keys(info[0])
-###############################################################
-
 
 
 # locate password form by_class_name
 password = driver.find_element_by_name('session_password')
 
-
-
-###############################################################CHANGE PASSWORD BELOW
 password.send_keys(info[1])
-###############################################################
+
 # locate submit button by_class_name
 log_in_button = driver.find_element_by_class_name('sign-in-form__submit-btn')
 
